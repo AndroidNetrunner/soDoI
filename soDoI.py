@@ -4,7 +4,7 @@ from discord.abc import User
 from discord.enums import Status
 from discord.ext import commands
 
-token = open("C:/Users/byukim/Documents/python/discord_bot/soDoI/token.txt",
+token = open("token.txt",
              'r').read()
 game = discord.Game("현재 대기")
 bot = commands.Bot(command_prefix='!', status=discord.Status.online, activity=game)
