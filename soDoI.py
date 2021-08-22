@@ -59,7 +59,7 @@ async def 시작(ctx):
     global main_channel
     global can_join
     main_channel = ctx
-    game.name = "게임 진행"
+    await bot.change_presence(activity=discord.Game(name="게임 진행"))
     player = ctx.message.author
     members.append(player)
     start = True
