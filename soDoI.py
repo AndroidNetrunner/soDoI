@@ -50,6 +50,7 @@ async def calculate():
     for member in members:
         embed.add_field(name=member, value=f"입력 단어: {words[member]}, 총점: {score[member]}")
     await main_channel.send(embed=embed)
+    await bot.change_presence(activity=discord.Game(name="현재 대기"))
     can_join = False
     start = False
     count = 0
