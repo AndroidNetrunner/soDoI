@@ -15,9 +15,7 @@ active_game = {}
 current_game = game_data()
 
 async def reset_game(ctx):
-    global current_game
-    current_game = game_data()
-    print(current_game.members)
+    current_game.reset()
     await ctx.send("게임이 초기화되었습니다.")
 
 async def start_game():

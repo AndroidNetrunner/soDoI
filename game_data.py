@@ -1,5 +1,7 @@
 class game_data:
     def __init__(self):
+        self.reset()
+    def reset(self):
         self.start = False
         self.can_join = False
         self.members = []
