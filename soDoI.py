@@ -54,10 +54,11 @@ async def calculate(channel):
 
 @bot.command()
 async def 시작(ctx):
+    if ctx.channel.id in active_game:
+        await ctx.send("이미 시작한 게임이 존재합니다.")
+        return
     active_game[ctx.channel.id] = game_data()
     current_game = active_game[ctx.channel.id]
-    if current_game.start:
-        ctx.send("이미 시작한 게임이 존재합니다.")
     current_game.main_channel = ctx
     await bot.change_presence(activity=discord.Game(name="게임 진행"))
     player = ctx.message.author
