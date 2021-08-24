@@ -12,13 +12,12 @@ bot = commands.Bot(command_prefix='!', status=discord.Status.online, activity=ga
 
 active_game = {}
 
-current_game = game_data()
-
 async def reset_game(ctx):
-    current_game.reset()
+    del active_game[ctx.channel.id]
     await ctx.send("게임이 초기화되었습니다.")
 
-async def start_game():
+async def start_game(ctx):
+    current_game = active_game[ctx.channel.id]
     current_game.start = True
     embed=discord.Embed(title="너도나도 게임이 시작되었습니다!", description="답을 어떻게 제출하면 되는지 설명드릴게요~")
     embed.add_field(name="제출 방법", value=f"본인이 작성하고 싶은 단어를 저에게 DM으로 보내주세요! 단어는 각각 다른 메세지로 보내주셔야 합니다. 총 {current_game.count}개의 단어를 입력하면 자동으로 제출됩니다!")
@@ -31,7 +30,8 @@ async def start_game():
             channel = await member.create_dm()
         await channel.send(embed=embed)
 
-async def calculate():
+async def calculate(channel):
+    current_game = active_game[channel.id]
     for member in current_game.words:
         for word in current_game.words[member]:
             if word in current_game.answers:
@@ -54,6 +54,10 @@ async def calculate():
 
 @bot.command()
 async def 시작(ctx):
+    active_game[ctx.channel.id] = game_data()
+    current_game = active_game[ctx.channel.id]
+    if current_game.start:
+        ctx.send("이미 시작한 게임이 존재합니다.")
     current_game.main_channel = ctx
     await bot.change_presence(activity=discord.Game(name="게임 진행"))
     player = ctx.message.author
@@ -66,6 +70,7 @@ async def 시작(ctx):
 
 @bot.command()
 async def 개수(ctx, number):
+    current_game = active_game[ctx.channel.id]
     if current_game.can_join:
         current_game.count = int(number)
     await ctx.send(f'단어 개수가 {current_game.count}로 설정되었습니다.')
@@ -76,6 +81,7 @@ async def 리셋(ctx):
 
 @bot.command()
 async def 참가(ctx):
+    current_game = active_game[ctx.channel.id]
     if current_game.can_join == True:
         player = ctx.message.author
         if player not in current_game.members:
@@ -88,19 +94,24 @@ async def 참가(ctx):
 
 @bot.command()
 async def 마감(ctx):
+    current_game = active_game[ctx.channel.id]
     if not current_game.count:
         await ctx.send("제출할 수 있는 단어가 0개입니다. 단어 개수를 설정해주세요.")
         return
     if current_game.can_join == True:
         current_game.can_join = False
         await ctx.send("참가가 마감되었습니다.")
-        await start_game()
+        await start_game(ctx)
     else:
         await ctx.send("현재 진행중인 게임이 없습니다.")
 
 @bot.event
 async def on_message(message):
     await bot.process_commands(message)
+    for channel_id in active_game:
+        if message.author in active_game[channel_id].members:
+            current_game = active_game[channel_id]
+            break
     if message.author.bot:
         return
     if current_game.start == True:
@@ -122,5 +133,5 @@ async def on_message(message):
                     current_game.game_end = False
                     break
             if current_game.game_end:
-                await calculate()
+                await calculate(message.channel)
 bot.run(token)
