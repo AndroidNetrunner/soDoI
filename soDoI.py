@@ -52,6 +52,8 @@ async def calculate(channel):
     current_game.can_join = False
     current_game.start = False
     current_game.count = 0
+    del active_game[channel.id]
+    await bot.change_presence(activity=discord.Game(name="현재 대기"))
 
 @bot.command()
 async def 시작(ctx):
@@ -136,5 +138,5 @@ async def on_message(message):
                     current_game.game_end = False
                     break
             if current_game.game_end:
-                await calculate(message.channel)
+                await calculate(current_game.main_channel.channel)
 bot.run(token)
