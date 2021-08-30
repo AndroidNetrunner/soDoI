@@ -14,6 +14,7 @@ active_game = {}
 
 async def reset_game(ctx):
     del active_game[ctx.channel.id]
+    await bot.change_presence(activity=discord.Game(name="현재 대기"))
     await ctx.send("게임이 초기화되었습니다.")
 
 async def start_game(ctx):
