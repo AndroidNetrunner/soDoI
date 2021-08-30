@@ -109,12 +109,13 @@ async def 마감(ctx):
 
 @bot.event
 async def on_message(message):
+    current_game = None
     await bot.process_commands(message)
     for channel_id in active_game:
         if message.author in active_game[channel_id].members:
             current_game = active_game[channel_id]
             break
-    if message.author.bot:
+    if message.author.bot or not current_game:
         return
     if current_game.start == True:
         if message.channel.type.name == "private":
