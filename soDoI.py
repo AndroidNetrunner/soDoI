@@ -14,7 +14,6 @@ active_game = {}
 
 async def reset_game(ctx):
     del active_game[ctx.channel.id]
-    await bot.change_presence(activity=discord.Game(name="현재 대기"))
     await ctx.send("게임이 초기화되었습니다.")
 
 async def start_game(ctx):
@@ -48,13 +47,11 @@ async def calculate(channel):
     for member in current_game.members:
         embed.add_field(name=member, value=f"입력 단어: {current_game.words[member]}, 총점: {current_game.score[member]}")
     await current_game.main_channel.send(embed=embed)
-    await bot.change_presence(activity=discord.Game(name="현재 대기"))
     current_game.can_join = False
     current_game.start = False
     current_game.count = 0
     del active_game[channel.id]
-    await bot.change_presence(activity=discord.Game(name="현재 대기"))
-
+    
 @bot.command()
 async def 시작(ctx):
     if ctx.channel.id in active_game:
