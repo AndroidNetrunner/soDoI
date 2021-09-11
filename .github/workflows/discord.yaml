@@ -1,0 +1,26 @@
+# Create DISCORD_WEBHOOK url to Secrets https://discord.com/api/webhooks/886075890667249724/lKUvgjqtLKQlDHCaxbOvfVqrgSdi82FrnrSs4GN8Sy7JEMQ4UO6PlOWdOxBL0rTOq0ox
+name: Notification on push
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Discord notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        DISCORD_USERNAME: GitHub Actions
+        DISCORD_AVATAR: https://cdn-icons-png.flaticon.com/512/25/25231.png
+      uses: Ilshidur/action-discord@master
+      with:
+        args: 'A new commit has been pushed to {{ EVENT_PAYLOAD.repository.full_name }}'
+    - name: Discord notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
