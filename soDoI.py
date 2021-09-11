@@ -7,7 +7,7 @@ from game_data import game_data
 
 token = open("token.txt",
              'r').read()
-game = discord.Game("현재 대기")
+game = discord.Game("!명령어")
 bot = commands.Bot(command_prefix='!', status=discord.Status.online, activity=game)
 
 active_game = {}
@@ -63,7 +63,6 @@ async def 시작(ctx):
     active_game[ctx.channel.id] = game_data()
     current_game = active_game[ctx.channel.id]
     current_game.main_channel = ctx
-    await bot.change_presence(activity=discord.Game(name="게임 진행"))
     player = ctx.message.author
     current_game.members.append(player)
     current_game.start = True
