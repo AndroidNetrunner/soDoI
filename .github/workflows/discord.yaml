@@ -4,7 +4,7 @@ name: Notification on push
 on:
   push:
     branches:
-    - main
+    - master
 
 jobs:
   build:
