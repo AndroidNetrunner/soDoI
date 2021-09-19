@@ -81,6 +81,9 @@ async def 리셋(ctx):
 
 @bot.command()
 async def 참가(ctx):
+    if ctx.channel.id not in active_game:
+        await ctx.send("시작한 게임이 존재하지 않습니다.")
+        return
     current_game = active_game[ctx.channel.id]
     if current_game.can_join == True:
         player = ctx.message.author
