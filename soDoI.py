@@ -57,6 +57,7 @@ async def 시작(ctx):
     if ctx.channel.id in active_game:
         await ctx.send("이미 시작한 게임이 존재합니다.")
         return
+    print(f"soDoI - {datetime.datetime.now()} : <start> {ctx.channel.id}")
     active_game[ctx.channel.id] = game_data()
     current_game = active_game[ctx.channel.id]
     current_game.main_channel = ctx
