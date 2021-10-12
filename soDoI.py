@@ -5,11 +5,13 @@ from discord.abc import User
 from discord.enums import Status
 from discord.ext import commands
 from game_data import game_data
+from threading import Lock
 
 token = open("token.txt",
              'r').read()
 game = discord.Game("!명령어")
 bot = commands.Bot(command_prefix='!', status=discord.Status.online, activity=game)
+lock_for_word_submission = Lock()
 
 active_game = {}
 
@@ -122,6 +124,7 @@ async def on_message(message):
         return
     if current_game.start == True:
         if message.channel.type.name == "private":
+            lock_for_word_submission.acquire()
             if message.content not in current_game.words[message.author]:
                 if len(current_game.words[message.author]) >= current_game.count:
                     await message.channel.send("단어 개수를 초과하였습니다.")
@@ -132,6 +135,7 @@ async def on_message(message):
             await message.channel.send(f"현재 입력된 단어: {current_game.words[message.author]}")
             if len(current_game.words[message.author]) >= current_game.count:
                 await message.channel.send(f"입력이 모두 완료되었습니다. 추가는 불가능하지만, 수정은 가능합니다.")
+            lock_for_word_submission.release()
         current_game.game_end = True
         if current_game.can_join == False:
             for member in current_game.members:
