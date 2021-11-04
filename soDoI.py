@@ -44,7 +44,7 @@ async def calculate(channel):
         for word in current_game.words[member]:
             if current_game.answers[word] != 1:
                 current_game.score[member] += current_game.answers[word]
-    embed = discord.Embed(title="결과 발표", description="모든 플레이어가 단어 제출을 완료하였습니다. 각 플레이어가 획득한 점수는 다음과 같습니다.")
+    embed = discord.Embed(title="결과 발표", description="모든 플레이어가 단어 제출을 완료하였습니다. 각 플레이어가 획득한 점수는 다음과 같습니다.", inline=False)
     for member in current_game.members:
         embed.add_field(name=member, value=f"입력 단어: {current_game.words[member]}, 총점: {current_game.score[member]}")
     await current_game.main_channel.send(embed=embed)
