@@ -8,8 +8,8 @@ from game_data import game_data
 
 token = open("token.txt",
              'r').read()
-game = discord.Game("!명령어")
-bot = commands.Bot(command_prefix='!', status=discord.Status.online, activity=game)
+game = discord.Game(",명령어")
+bot = commands.Bot(command_prefix=',', status=discord.Status.online, activity=game)
 
 active_game = {}
 
